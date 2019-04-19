@@ -27,30 +27,27 @@ class App extends Component {
 	constructor() {
 		super();
 		this.state = {
-			input: ''
+			input: '',
+			imageURL: ''
 		};
 	}
 
 	onInputChange = (event) => {
-		console.log(event.target.value);
+		this.setState({ input: event.target.value });
 	};
 
 	onButtonSubmit = () => {
+		this.setState({ imageURL: this.state.input });
 		let app = new Clarifai.App({ apiKey: API_KEY });
 
-		app.models
-			.predict(
-				{ id: 'food', version: 'dfebc169854e429086aceb8368662641' },
-				'https://samples.clarifai.com/metro-north.jpg'
-			)
-			.then(
-				function(response) {
-					console.log(response);
-				},
-				function(err) {
-					// there was an error
-				}
-			);
+		app.models.predict({ id: 'food', version: 'dfebc169854e429086aceb8368662641' }, this.state.input).then(
+			function(response) {
+				console.log(response);
+			},
+			function(err) {
+				// there was an error
+			}
+		);
 	};
 
 	render() {
@@ -61,7 +58,7 @@ class App extends Component {
 				<Logo />
 				<Rank />
 				<ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
-				<ImageRecognition />
+				<ImageRecognition imageURL={this.state.imageURL} />
 			</div>
 		);
 	}

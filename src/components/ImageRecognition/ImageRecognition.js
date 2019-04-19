@@ -1,9 +1,9 @@
 import React from 'react';
 
-const ImageRecognition = () => {
+const ImageRecognition = ({ imageURL }) => {
 	return (
 		<div className="center">
-			<img src={'https://samples.clarifai.com/metro-north.jpg'} alt="uploaded" />
+			<img src={imageURL} alt="uploaded" />
 		</div>
 	);
 };
