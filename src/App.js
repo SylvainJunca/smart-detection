@@ -4,6 +4,7 @@ import Clarifai from 'clarifai';
 import './App.css';
 import Navigation from './components/Navigation/Navigation';
 import Logo from './components/Logo/Logo';
+import ImageRecognition from './components/ImageRecognition/ImageRecognition';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
 
@@ -60,7 +61,7 @@ class App extends Component {
 				<Logo />
 				<Rank />
 				<ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
-				{/* <FaceRecognition /> */}
+				<ImageRecognition />
 			</div>
 		);
 	}
