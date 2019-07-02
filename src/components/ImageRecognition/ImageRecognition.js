@@ -3,7 +3,7 @@ import React from 'react';
 const ImageRecognition = ({ imageURL }) => {
 	return (
 		<div className="center">
-			<img src={imageURL} alt="uploaded" />
+			<img style= {{maxWidth : '80%'}} src={imageURL} alt="uploaded" />
 		</div>
 	);
 };
