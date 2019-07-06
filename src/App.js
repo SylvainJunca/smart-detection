@@ -6,7 +6,7 @@ import Navigation from './components/Navigation/Navigation';
 import Logo from './components/Logo/Logo';
 import ImageRecognition from './components/ImageRecognition/ImageRecognition';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
-import Rank from './components/Rank/Rank';
+import ResultList from './components/Result/ResultList'
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 
@@ -28,7 +28,8 @@ class App extends Component {
 		super();
 		this.state = {
 			input: '',
-			imageURL: ''
+			imageURL: '',
+			result: []
 		};
 	}
 
@@ -36,29 +37,33 @@ class App extends Component {
 		this.setState({ input: event.target.value });
 	};
 
-	onButtonSubmit = () => {
+	onButtonSubmit = async () => {
 		this.setState({ imageURL: this.state.input });
 		let app = new Clarifai.App({ apiKey: API_KEY });
 
-		app.models.predict({ id: 'food', version: 'dfebc169854e429086aceb8368662641' }, this.state.input).then(
+		const result = await app.models.predict({ id: 'food', version: 'dfebc169854e429086aceb8368662641' }, this.state.input).then(
 			function(response) {
-				console.log(response);
+				const arrayOfFood = response.outputs[0].data.concepts
+				return arrayOfFood;
 			},
 			function(err) {
-				// there was an error
+				alert(err);
 			}
 		);
+		this.setState({result})
 	};
-
+  
 	render() {
+		console.log(this.state.result)
+		const result = (this.state.result.length > 0) ? 	<ResultList result={this.state.result} /> : ''
 		return (
 			<div className="App">
 				<Particles className="particles" params={particlesOptions} />
 				<Navigation />
 				<Logo />
-				<Rank />
 				<ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
 				<ImageRecognition imageURL={this.state.imageURL} />
+			  {result}
 			</div>
 		);
 	}
