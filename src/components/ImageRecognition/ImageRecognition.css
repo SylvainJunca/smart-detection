@@ -1,7 +1,3 @@
-img {
-  width: 100%;
-}
-
-.thumbnail {
-  width: 250px;
+#imageResult {
+  height : 250px;
 }
