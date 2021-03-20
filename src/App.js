@@ -9,6 +9,7 @@ import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import ResultList from './components/Result/ResultList'
 
 const API_KEY = process.env.REACT_APP_API_KEY;
+console.log(process.env.REACT_APP_API_KEY)
 
 const particlesOptions = {
 	particles: {
@@ -37,25 +38,27 @@ class App extends Component {
 		this.setState({ input: event.target.value });
 	};
 
-	onButtonSubmit = async () => {
+	onButtonSubmit = () => {
 		this.setState({ imageURL: this.state.input });
-		let app = new Clarifai.App({ apiKey: API_KEY });
+		const FoodApi = new Clarifai.App({ apiKey: API_KEY });
 
-		const result = await app.models.predict({ id: 'food', version: 'dfebc169854e429086aceb8368662641' }, this.state.input).then(
-			function(response) {
-				const arrayOfFood = response.outputs[0].data.concepts
-				return arrayOfFood;
-			},
-			function(err) {
-				alert(err);
-			}
-		);
-		this.setState({result})
+		FoodApi.models.predict({ id: 'food', version: 'dfebc169854e429086aceb8368662641' }, this.state.input)
+		  .then(response => {
+          console.log({response})
+          const arrayOfFood = !!response.outputs && !!response.outputs.length && response.outputs[0].data.concepts;
+          this.setState({result : arrayOfFood}) 
+        }
+	    )
+      .catch(error => {
+        alert(error);
+       }
+      );
+		
 	};
   
 	render() {
-		console.log(this.state.result)
-		const result = (this.state.result.length > 0) ? 	<ResultList result={this.state.result} /> : ''
+		console.log({API_KEY}, this.state.result)
+		const result = !!this.state.result && this.state.result.length > 0 && <ResultList result={this.state.result} /> || '';
 		return (
 			<div className="App">
 				<Particles className="particles" params={particlesOptions} />
