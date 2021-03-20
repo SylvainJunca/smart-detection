@@ -4,10 +4,9 @@ import './ResultList.css';
 
 
 const ResultList = ({result}) => {
-  console.log("result in ResultList :", result)
   
   const resultComponent = result.map((item, i) => {
-    console.log(item)
+    
     return <Result
       key={i}
       id = {i + 1}

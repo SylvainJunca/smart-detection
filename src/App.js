@@ -3,13 +3,11 @@ import Particles from 'react-particles-js';
 import Clarifai from 'clarifai';
 import './App.css';
 import Navigation from './components/Navigation/Navigation';
-import Logo from './components/Logo/Logo';
 import ImageRecognition from './components/ImageRecognition/ImageRecognition';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import ResultList from './components/Result/ResultList'
 
 const API_KEY = process.env.REACT_APP_API_KEY;
-console.log(process.env.REACT_APP_API_KEY)
 
 const particlesOptions = {
 	particles: {
@@ -23,6 +21,8 @@ const particlesOptions = {
 		retina_detect: true
 	}
 };
+
+const FoodApi = new Clarifai.App({ apiKey: API_KEY });
 
 class App extends Component {
 	constructor() {
@@ -39,8 +39,8 @@ class App extends Component {
 	};
 
 	onButtonSubmit = () => {
+  
 		this.setState({ imageURL: this.state.input });
-		const FoodApi = new Clarifai.App({ apiKey: API_KEY });
 
 		FoodApi.models.predict({ id: 'food', version: 'dfebc169854e429086aceb8368662641' }, this.state.input)
 		  .then(response => {
@@ -57,13 +57,11 @@ class App extends Component {
 	};
   
 	render() {
-		console.log({API_KEY}, this.state.result)
 		const result = !!this.state.result && this.state.result.length > 0 && <ResultList result={this.state.result} /> || '';
 		return (
 			<div className="App">
 				<Particles className="particles" params={particlesOptions} />
 				<Navigation />
-				<Logo />
 				<ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
 				<ImageRecognition imageURL={this.state.imageURL} />
 			  {result}
