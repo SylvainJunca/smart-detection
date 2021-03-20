@@ -30,7 +30,8 @@ class App extends Component {
 		this.state = {
 			input: '',
 			imageURL: '',
-			result: []
+			result: [],
+      loading : false
 		};
 	}
 
@@ -38,19 +39,21 @@ class App extends Component {
 		this.setState({ input: event.target.value });
 	};
 
+
 	onButtonSubmit = () => {
-  
-		this.setState({ imageURL: this.state.input });
+    
+		this.setState({ imageURL: this.state.input, loading : true });
 
 		FoodApi.models.predict({ id: 'food', version: 'dfebc169854e429086aceb8368662641' }, this.state.input)
 		  .then(response => {
-          console.log({response})
           const arrayOfFood = !!response.outputs && !!response.outputs.length && response.outputs[0].data.concepts;
-          this.setState({result : arrayOfFood}) 
+          this.setState({result : arrayOfFood, loading : false});
         }
 	    )
       .catch(error => {
-        alert(error);
+        console.log(error)
+        this.setState({loading : false});
+        alert("Something went wrong, please make sure the url points to an image : ", error);
        }
       );
 		
@@ -62,7 +65,7 @@ class App extends Component {
 			<div className="App">
 				<Particles className="particles" params={particlesOptions} />
 				<Navigation />
-				<ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
+				<ImageLinkForm input={this.state.input} onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} loading= {this.state.loading}/>
 				<ImageRecognition imageURL={this.state.imageURL} />
 			  {result}
 			</div>
